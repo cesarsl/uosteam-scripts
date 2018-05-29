@@ -1,0 +1,232 @@
+// Check for minimun of 40 mana
+if maxmana < 40
+  sysmsg 'Minimun mana not enough. Stopping...' 33
+  stop
+endif
+// Initial script setup
+@removelist 'OreList'
+@removelist 'KeepItems'
+// Getting Storage, Runebooks and Forge
+if not @findalias 'OreStorage'
+  promptalias 'OreStorage'
+endif
+if not @findalias 'OreBook1'
+  promptalias 'OreBook1'
+endif
+if not @findalias 'OreBook2'
+  promptalias 'OreBook2'
+endif
+if not @findalias 'OreBook3'
+  promptalias 'OreBook3'
+endif
+if not @findalias 'HomeOreBook'
+  promptalias 'HomeOreBook'
+endif
+if not @findalias 'HomeForge'
+  promptalias 'HomeForge'
+endif
+// Creating lists
+if not listexists 'OreBook'
+  @createlist 'OreBook'
+endif
+if not listexists 'OreList'
+  @createlist 'OreList'
+endif
+if not listexists 'KeepItems'
+  @createlist 'KeepItems'
+endif
+if not listexists 'Runes'
+  @createlist 'Runes'
+endif
+// Populating Lists
+if list 'OreBook' == 0
+  @pushlist 'OreBook' 'OreBook1'
+  @pushlist 'OreBook' 'OreBook2'
+  @pushlist 'OreBook' 'OreBook3'
+endif
+if list 'OreList' == 0
+  @pushlist 'OreList' '0x19b7' // Ore Type 1
+  @pushlist 'OreList' '0x19b8' // Ore Type 2
+  @pushlist 'OreList' '0x19b9' // Ore Type 3
+  @pushlist 'OreList' '0x19ba' // Ore Type 4
+endif
+if list 'KeepItems' == 0
+  @pushlist 'KeepItems' '0x1bf2' // Ingots
+  @pushlist 'KeepItems' '0x3192' // Dark Saphire
+  @pushlist 'KeepItems' '0x3193' // Turquoise
+  @pushlist 'KeepItems' '0x3194' // Perfect Emerald
+  @pushlist 'KeepItems' '0x3195' // Ecru Citrine
+  @pushlist 'KeepItems' '0x3197' // Fire Ruby
+  @pushlist 'KeepItems' '0x3198' // Blue Diamond
+endif
+if list 'Runes' == 0
+  @pushlist 'Runes' 5
+  @pushlist 'Runes' 11
+  @pushlist 'Runes' 17
+  @pushlist 'Runes' 23
+  @pushlist 'Runes' 29
+  @pushlist 'Runes' 35
+  @pushlist 'Runes' 41
+  @pushlist 'Runes' 47
+  @pushlist 'Runes' 53
+  @pushlist 'Runes' 59
+  @pushlist 'Runes' 65
+  @pushlist 'Runes' 71
+  @pushlist 'Runes' 77
+  @pushlist 'Runes' 83
+  @pushlist 'Runes' 89
+  @pushlist 'Runes' 95
+endif
+// Check for pickaxes
+if not @findtype '0xe86' '0' 'backpack' 'any' '2'
+  sysmsg 'No pickaxe found.' 33
+  if @findtype '0x1bf2' '0' 'backpack' 'any' '2' and skill 'tinkering' > 80
+    sysmsg 'Tinekring some pickaxes...' 33
+    @usetype '0x1eb8' '0' 'backpack' 'any' '2'
+    waitforgump 0x38920abd 15000
+    replygump 0x38920abd 8
+    waitforgump 0x38920abd 15000
+    replygump 0x38920abd 114
+    waitforgump 0x38920abd 15000
+    replygump 0x38920abd 144
+  else
+    sysmsg 'No tinkering tools or ingots...' 33
+    sysmsg 'Trying at home' 33
+    cast 'recall'
+    autotargetobject 'HomeOreBook'
+    pause 4000
+    @useobject 'OreStorage'
+    pause 800
+    if skill 'tinkering' > 80
+      if @findtype '0x1bf2' '0' 'OreStorage' '4' '2'
+        moveitem 'found' 'backpack' '0' '0' '0' '4'
+        pause 2000
+        replay
+      else
+        sysmsg 'No iron ingots at home. Stopping...' 33
+        stop
+      endif
+    else
+      if @findtype '0xe86' 'any' 'OreStorage' '1' '2'
+        moveitem 'found' 'backpack' '0' '0' '0' '1'
+        pause 2000
+      else
+        sysmsg 'No pickaxes found at storage. Stoping...'
+        stop
+      endif
+    endif
+  endif
+endif
+sysmsg 'Starting to mine.' 33
+pause 1000
+while list 'OreBook' > 0
+    sysmsg 'Using OreBook: ' 33
+    sysmsg OreBook[0] 33
+  while list 'Runes' > 0
+    pause 500
+    while mana < 20
+      sysmsg 'Meditating...' 33
+      pause 2000
+    endwhile
+    @clearjournal
+    pause 500
+    useobject OreBook[0]
+    waitforgump 0x554b87f3 5000
+    replygump 0x554b87f3 Runes[0]
+    sysmsg 'Rune position:' 33
+    sysmsg Runes[0] 33
+    pause 4000
+    if @injournal 'blocked' 'system'
+      @clearjournal
+      replay
+    endif
+    while not @injournal 'There is no metal here to mine' 'system'
+      pause 300
+      usetype '0xe86' '0' 'backpack' 'any' '2'
+      waitfortarget 15000
+      targettileoffset 0 -1 0
+      pause 800
+      if @injournal "You can't mine there" "system"
+        sysmsg 'Bad rune.' 33
+        @clearjournal
+        poplist 'Runes' 'front'
+        break
+      endif
+      if @injournal "You can't mine that" "system"
+        sysmsg 'Restarting script...' 33
+        @clearjournal
+        replay
+      endif
+      // World saving workaround
+      canceltarget
+      if diffweight < '80'
+        cast 'recall'
+        autotargetobject 'HomeOreBook'
+        pause 4000
+        // Smelt Ore before storage
+        for 0 to 'OreList'
+          while @findtype 'OreList[]' 'any' 'backpack' 'any' '2'
+            sysmsg 'Smelting ore...' 33
+            @clearjournal
+            @useobject 'found'
+            waitfortarget 2500
+            @target 'HomeForge'
+            pause 800
+            if @injournal 'There is not enough' 'system'
+              ignoreobject 'found'
+            endif
+          endwhile
+          clearignorelist
+        endfor
+        // Store Ingots and Gems
+        for 0 to 'KeepItems'
+          while @findtype 'KeepItems[]' 'any' 'backpack' 'any' '2'
+            @moveitem 'found' 'OreStorage'
+            pause 800
+          endwhile
+        endfor
+        // Check for mana
+        if mana < 25
+          @useskill 'meditation'
+          while mana < 40
+            pause 300
+          endwhile
+        endif
+        // Recall back to mining
+        @useobject OreBook[0]
+        waitforgump 0x554b87f3 5000
+        replygump 0x554b87f3 Runes[0]
+        pause 4000
+      endif
+      // Check for pickaxes
+      if not @findtype '0xe86' '0' 'backpack' 'any' '2'
+        sysmsg 'Out of pickaxes... Replaying script' 33
+        replay
+      endif
+    endwhile
+    if mana < 25
+      @useskill 'meditation'
+      while mana < 40
+        pause 300
+      endwhile
+    endif
+    pause 4000
+    if list 'Runes' ==  1
+        poplist 'Runes' 'front'
+        break
+    else
+        poplist 'Runes' 'front'
+    endif
+  endwhile
+  pause 4000
+  if list 'OreBook' == 1
+    poplist 'OreBook' 'front'
+    replay
+  else
+    poplist 'OreBook' 'front'
+  endif
+endwhile
+@cast 'recall'
+@autotargetobject 'HomeOreBook'
+@removelist 'OreBook'
+@removelist 'Runes'
