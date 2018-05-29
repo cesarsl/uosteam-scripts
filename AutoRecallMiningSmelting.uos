@@ -219,12 +219,8 @@ while list 'OreBook' > 0
     endif
   endwhile
   pause 4000
-  if list 'OreBook' == 1
-    poplist 'OreBook' 'front'
-    replay
-  else
-    poplist 'OreBook' 'front'
-  endif
+  poplist 'OreBook' 'front'
+  replay
 endwhile
 @cast 'recall'
 @autotargetobject 'HomeOreBook'
