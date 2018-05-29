@@ -160,31 +160,35 @@ while list 'OreBook' > 0
       // World saving workaround
       canceltarget
       if diffweight < '80'
-        cast 'recall'
         autotargetobject 'HomeOreBook'
-        pause 4000
-        // Smelt Ore before storage
-        for 0 to 'OreList'
-          while @findtype 'OreList[]' 'any' 'backpack' 'any' '2'
-            sysmsg 'Smelting ore...' 33
-            @clearjournal
-            @useobject 'found'
-            waitfortarget 2500
-            @target 'HomeForge'
-            pause 800
-            if @injournal 'There is not enough' 'system'
-              ignoreobject 'found'
-            endif
-          endwhile
-          clearignorelist
-        endfor
-        // Store Ingots and Gems
-        for 0 to 'KeepItems'
-          while @findtype 'KeepItems[]' 'any' 'backpack' 'any' '2'
-            @moveitem 'found' 'OreStorage'
-            pause 800
-          endwhile
-        endfor
+        cast 'recall'
+        pause 2000
+        if @inrange 'HomeForge' '4'
+          // Smelt Ore before storage
+          for 0 to 'OreList'
+            while @findtype 'OreList[]' 'any' 'backpack' 'any' '2'
+              sysmsg 'Smelting ore...' 33
+              @clearjournal
+              @useobject 'found'
+              waitfortarget 2500
+              @target 'HomeForge'
+              pause 800
+              if @injournal 'There is not enough' 'system'
+                ignoreobject 'found'
+              endif
+            endwhile
+            clearignorelist
+          endfor
+          // Store Ingots and Gems
+          for 0 to 'KeepItems'
+            while @findtype 'KeepItems[]' 'any' 'backpack' 'any' '2'
+              @moveitem 'found' 'OreStorage'
+              pause 800
+            endwhile
+          endfor
+        else
+          replay
+        endif
         // Check for mana
         if mana < 25
           @useskill 'meditation'
