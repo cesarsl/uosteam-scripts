@@ -138,6 +138,8 @@ while list 'OreBook' > 0
     pause 4000
     if @injournal 'blocked' 'system'
       @clearjournal
+      @walk 'south'
+      @walk 'south'
       replay
     endif
     while not @injournal 'There is no metal here to mine' 'system'
