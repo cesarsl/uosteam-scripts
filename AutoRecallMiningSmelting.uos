@@ -60,22 +60,22 @@ if list 'KeepItems' == 0
   @pushlist 'KeepItems' '0x3198' // Blue Diamond
 endif
 if list 'Runes' == 0
-  @pushlist 'Runes' 5
-  @pushlist 'Runes' 11
-  @pushlist 'Runes' 17
-  @pushlist 'Runes' 23
-  @pushlist 'Runes' 29
-  @pushlist 'Runes' 35
-  @pushlist 'Runes' 41
-  @pushlist 'Runes' 47
-  @pushlist 'Runes' 53
-  @pushlist 'Runes' 59
-  @pushlist 'Runes' 65
-  @pushlist 'Runes' 71
-  @pushlist 'Runes' 77
-  @pushlist 'Runes' 83
-  @pushlist 'Runes' 89
-  @pushlist 'Runes' 95
+  @pushlist 'Runes' 5 // Rune 1
+  @pushlist 'Runes' 11 // Rune 2
+  @pushlist 'Runes' 17 // Rune 3
+  @pushlist 'Runes' 23 // Rune 4
+  @pushlist 'Runes' 29 // Rune 5
+  @pushlist 'Runes' 35 // Rune 6
+  @pushlist 'Runes' 41 // Rune 7
+  @pushlist 'Runes' 47 // Rune 8
+  @pushlist 'Runes' 53 // Rune 9
+  @pushlist 'Runes' 59 // Rune 10
+  @pushlist 'Runes' 65 // Rune 11
+  @pushlist 'Runes' 71 // Rune 12
+  @pushlist 'Runes' 77 // Rune 13
+  @pushlist 'Runes' 83 // Rune 14
+  @pushlist 'Runes' 89 // Rune 15
+  @pushlist 'Runes' 95 // Rune 16
 endif
 // Check for pickaxes
 if not @findtype '0xe86' '0' 'backpack' 'any' '2'
