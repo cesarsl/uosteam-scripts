@@ -116,9 +116,10 @@ while list 'TreeBook' > 0
             @canceltarget
             // Use axe to north tree tile
             useobject 'Axe'
+            pause 500
             waitfortarget 2500
             targettileoffset 0 -1 0
-            pause 1000
+            pause 800
             // Snake warning
             if @injournal 'dislodged' 'system'
                 sysmsg 'SNAKE!!!' 33
