@@ -159,7 +159,7 @@ while list 'TreeBook' > 0
                             pause 300
                             @useobject 'LogStorage'
                             @moveitem 'found' 'LogStorage'
-                            pause 800
+                            pause 1000
                         endwhile
                     endfor
                 endwhile
