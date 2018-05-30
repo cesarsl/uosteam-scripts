@@ -1,0 +1,92 @@
+// Author: César Liedke
+// Description: Recall Auto Lumber, Cutting Boards and Storage
+// Instructions:
+//  - Have a runebook with the default rune set to your storage
+//  - Have a rune set to near the blue chest in vesper musem
+//  - Put it at the second posistion in your runebook (you can change the position
+//    if you know what you're doing)
+//  - The boards MUST BE inside the main storage, not inside a bag inside the storage
+//  - In the BoardList and DonationList, comment the lines which you don't want to donate
+//
+
+@removelist 'BoardList'
+@removelist 'DonationList'
+@removelist 'BoardAmount'
+
+if not @findalias 'BoardStorage'
+    promptalias 'BoardStorage'
+endif
+
+if not @findalias 'Runebook'
+    promptalias 'Runebook'
+endif
+
+if not listexists 'BoardList'
+    @createlist 'BoardList'
+endif
+
+if not listexists 'DonationList'
+    @createlist 'DonationList'
+endif
+
+if not listexists 'BoardAmount'
+    @createlist 'BoardAmount'
+endif
+
+if list 'BoardList' == 0
+    // @pushlist 'BoardList' '0' // Color Normal Boards
+    // @pushlist 'BoardList' '1192' // Color Yew Boards
+    // @pushlist 'BoardList' '2010' // Color Oak Boards
+    // @pushlist 'BoardList' '1191' // Color Ash Boards
+     @pushlist 'BoardList' '1193' // Color Heartwood Boards
+    @pushlist 'BoardList' '1194' // Color Bloodwood Boards
+    @pushlist 'BoardList' '1151' // Color Frostwood Boards
+endif
+
+if list 'DonationList' == 0
+    // @pushlist 'DonationList' '302' // Gump Normal Position
+    // @pushlist 'DonationList' '303' // Gump Yew Position
+    // @pushlist 'DonationList' '304' // Gump Oak Position
+    // @pushlist 'DonationList' '305' // Gump Ash Position
+    @pushlist 'DonationList' '306' // Gump Heartwood Position
+    @pushlist 'DonationList' '307' // Gump Bloodwood Position
+    @pushlist 'DonationList' '308' // Gump Frostwood Position
+endif
+
+if list 'BoardAmount' == 0
+    @pushlist 'BoardAmount' '1' // Change the amount of boards to donate each time
+endif
+
+useobject 'BoardStorage'
+pause 4000
+
+for 0 to 'BoardList'
+    if @findtype '0x1bd7' 'BoardList[]' 'BoardStorage' 'any' '2'
+        pause 300
+        moveitem 'found' 'backpack' '0' '0' '0' BoardAmount[0]
+        pause 500
+    endif
+endfor
+
+useobject 'Runebook'
+waitforgump 0x554b87f3 5000
+replygump 0x554b87f3 11
+
+pause 4000
+
+useobject 0x40001c04
+waitforgump 0xe158184c 15000
+
+pause 1000
+
+for 0 to 'DonationList'
+    replygump 0xe158184c 'DonationList[]'
+    waitforprompt 15000
+    promptmsg BoardAmount[0]
+    pause 1000
+endfor
+
+replygump 0xe158184c 0
+
+autotargetobject 'Runebook'
+cast 'recall'
