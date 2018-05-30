@@ -1,5 +1,10 @@
 // Author: César Liedke
 // Description: Recall Auto Lumber, Cutting Boards and Storage
+// Instructions:
+//  - Works best with full LRC/LMC
+//  - Cuts the logs into boards before storing it away
+//  - You need a Runebook with the first rune set near the storage
+//  - You need 3 Runebooks with 16 runes each set to be south of a tree
 //
 // Check for minimun of 40 mana
 if maxmana < 40
