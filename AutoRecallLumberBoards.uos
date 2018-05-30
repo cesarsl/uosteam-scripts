@@ -163,7 +163,6 @@ while list 'TreeBook' > 0
                     for 0 to 'KeepItems'
                         while @findtype 'KeepItems[]' 'any' 'backpack' 'any' '2'
                             pause 300
-                            @useobject 'LogStorage'
                             @moveitem 'found' 'LogStorage'
                             pause 1000
                         endwhile
