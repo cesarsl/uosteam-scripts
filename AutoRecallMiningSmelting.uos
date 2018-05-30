@@ -1,3 +1,13 @@
+// Author:  César Liedke
+// Description: Recall Auto Mining, Smelting and Storage
+// Instructions:
+//  - Works best with full LRC/LMC
+//  - Must have pickaxes at the storage
+//  - If the char has tinkering greater than 80, creates pickaxes on the go
+//  - Smelts the ore before storing it away
+//  - You need a Runebook with the first rune set near the storage and the forge
+//  - You need 3 Runebooks with 16 runes each set to be south of a mining spot
+//
 // Check for minimun of 40 mana
 if maxmana < 40
   sysmsg 'Minimun mana not enough. Stopping...' 33
