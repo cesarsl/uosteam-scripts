@@ -149,6 +149,7 @@ while list 'TreeBook' > 0
                     @useobject 'Axe'
                     waitfortarget 2500
                     target! 'Log' 10000
+                    pause 2000
                     for 0 to 'KeepItems'
                         while @findtype 'KeepItems[]' 'any' 'backpack' 'any' '2'
                             pause 300
