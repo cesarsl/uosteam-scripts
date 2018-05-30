@@ -138,6 +138,10 @@ while list 'TreeBook' > 0
                 autotargetobject 'HomeTreeBook'
                 cast 'recall'
                 pause 4000
+                // Check if LogStorage is near. If not, replay
+                if not @inrange 'LogStorage' '4'
+                    replay
+                endif
                 // Cut logs before storing
                 while @findtype LogList[0] 'any' 'backpack' 'any' '2'
                     pause 300
