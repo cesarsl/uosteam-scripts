@@ -141,33 +141,48 @@ while list 'TreeBook' > 0
             endif
             // Check weight before continuing
             if diffweight < '80'
+                @clearjournal
                 autotargetobject 'HomeTreeBook'
                 cast 'recall'
                 pause 4000
+                // Check if recall failed because of overweight
+                if @injournal 'too encumbered to move' 'system'
+                    while @findtype LogList[0] 'any' 'backpack' 'any' '2'
+                        pause 300
+                        @setalias 'Log' 'found'
+                        @useobject 'Axe'
+                        waitfortarget 2500
+                        target! 'Log' 10000
+                        pause 2000
+                    endwhile
+                    replay
+                endif
                 // Check if LogStorage is near. If not, replay
                 if not @inrange 'LogStorage' '4'
                     replay
+                endif
+                // Check for equiped axe
+                if not @findlayer 'self' '2'
+                    equipitem 'Axe' '2'
+                    pause 1000
                 endif
                 // Cut logs before storing
                 while @findtype LogList[0] 'any' 'backpack' 'any' '2'
                     pause 300
                     @setalias 'Log' 'found'
-                    if not @findlayer 'self' '2'
-                        equipitem 'Axe' '2'
-                        pause 1000
-                    endif
                     @useobject 'Axe'
                     waitfortarget 2500
                     target! 'Log' 10000
                     pause 2000
-                    for 0 to 'KeepItems'
-                        while @findtype 'KeepItems[]' 'any' 'backpack' 'any' '2'
-                            pause 300
-                            @moveitem 'found' 'LogStorage'
-                            pause 1000
-                        endwhile
-                    endfor
                 endwhile
+                // Store the boards and other lumber stuff
+                for 0 to 'KeepItems'
+                    while @findtype 'KeepItems[]' 'any' 'backpack' 'any' '2'
+                        pause 300
+                        @moveitem 'found' 'LogStorage'
+                        pause 1000
+                    endwhile
+                endfor
                 // Recall to previous spot
                 @useobject TreeBook[0]
                 waitforgump 0x554b87f3 5000
