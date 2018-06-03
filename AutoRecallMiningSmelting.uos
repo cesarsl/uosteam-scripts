@@ -110,7 +110,9 @@ if not @findtype '0xe86' '0' 'backpack' 'any' '2'
     autotargetobject 'HomeOreBook'
     pause 4000
     @useobject 'SecureStorage'
-    pause 800
+    pause 500
+    @useobject 'OreStorage'
+    pause 500
     if skill 'tinkering' > 80
       if @findtype '0x1bf2' '0' 'OreStorage' '4' '2'
         moveitem 'found' 'backpack' '0' '0' '0' '4'
@@ -121,7 +123,7 @@ if not @findtype '0xe86' '0' 'backpack' 'any' '2'
         stop
       endif
     else
-      if @findtype '0xe86' 'any' 'OreStorage' '1' '2'
+      if @findtype '0xe86' 'any' 'SecureStorage' '1' '2'
         moveitem 'found' 'backpack' '0' '0' '0' '1'
         pause 2000
       else
