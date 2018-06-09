@@ -54,23 +54,30 @@ if list 'DonationList' == 0
 endif
 
 if list 'BoardAmount' == 0
-    @pushlist 'BoardAmount' '1' // Change the amount of boards to donate each time
+    @pushlist 'BoardAmount' '50' // Change the amount of boards to donate each time
 endif
 
 useobject 'BoardStorage'
 pause 4000
 
 for 0 to 'BoardList'
-    if @findtype '0x1bd7' 'BoardList[]' 'BoardStorage' 'any' '2'
+    if not @findtype '0x1bd7' 'BoardList[]' 'BoardStorage' BoardAmount[0] '2'
+        pause 300
+        poplist 'DonationList' 'front'
+    else
         pause 300
         moveitem 'found' 'backpack' '0' '0' '0' BoardAmount[0]
         pause 500
     endif
 endfor
 
+while mana < 40
+    pause 300
+endwhile
+
 useobject 'Runebook'
 waitforgump 0x554b87f3 5000
-replygump 0x554b87f3 11
+replygump 0x554b87f3 5
 
 pause 4000
 
@@ -79,14 +86,23 @@ waitforgump 0xe158184c 15000
 
 pause 1000
 
-for 0 to 'DonationList'
-    replygump 0xe158184c 'DonationList[]'
-    waitforprompt 15000
-    promptmsg BoardAmount[0]
-    pause 1000
-endfor
+if list 'DonationList' > 0
+    for 0 to 'DonationList'
+        if gumpexists 0xe158184c
+            replygump 0xe158184c 'DonationList[]'
+            waitforprompt 5000
+            promptmsg BoardAmount[0]
+            pause 1000
+        endif
+    endfor
+else
+    sysmsg 'No more boards. Stopping...' 33
+    stop
+endif
 
 replygump 0xe158184c 0
 
 autotargetobject 'Runebook'
 cast 'recall'
+
+pause 4000
