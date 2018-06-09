@@ -68,6 +68,11 @@ for 0 to 'BoardList'
     endif 
 endfor
 
+if not @findtype '0x1bd7' 'any' 'backpack' 'any' '2'
+    sysmsg 'No more boards. Stopping...' 33
+    stop
+endif
+
 while mana < 40
     pause 300
 endwhile
@@ -82,11 +87,6 @@ useobject 0x40001c04
 waitforgump 0xe158184c 15000
 
 pause 1000
-
-if not @findtype '0x1bd7' 'any' 'backpack' 'any' '2'
-    sysmsg 'No more boards. Stopping...' 33
-    stop
-endif
 
 for 0 to 'DonationList'
     if gumpexists 0xe158184c
