@@ -38,7 +38,7 @@ if list 'BoardList' == 0
     // @pushlist 'BoardList' '1192' // Color Yew Boards
     // @pushlist 'BoardList' '2010' // Color Oak Boards
     // @pushlist 'BoardList' '1191' // Color Ash Boards
-     @pushlist 'BoardList' '1193' // Color Heartwood Boards
+    @pushlist 'BoardList' '1193' // Color Heartwood Boards
     @pushlist 'BoardList' '1194' // Color Bloodwood Boards
     @pushlist 'BoardList' '1151' // Color Frostwood Boards
 endif
@@ -61,14 +61,11 @@ useobject 'BoardStorage'
 pause 4000
 
 for 0 to 'BoardList'
-    if not @findtype '0x1bd7' 'BoardList[]' 'BoardStorage' BoardAmount[0] '2'
-        pause 300
-        poplist 'DonationList' 'front'
-    else
+    if @findtype '0x1bd7' 'BoardList[]' 'BoardStorage' BoardAmount[0] '2'
         pause 300
         moveitem 'found' 'backpack' '0' '0' '0' BoardAmount[0]
         pause 500
-    endif
+    endif 
 endfor
 
 while mana < 40
@@ -86,19 +83,19 @@ waitforgump 0xe158184c 15000
 
 pause 1000
 
-if list 'DonationList' > 0
-    for 0 to 'DonationList'
-        if gumpexists 0xe158184c
-            replygump 0xe158184c 'DonationList[]'
-            waitforprompt 5000
-            promptmsg BoardAmount[0]
-            pause 1000
-        endif
-    endfor
-else
+if not @findtype '0x1bd7' 'any' 'backpack' 'any' '2'
     sysmsg 'No more boards. Stopping...' 33
     stop
 endif
+
+for 0 to 'DonationList'
+    if gumpexists 0xe158184c
+        replygump 0xe158184c 'DonationList[]'
+        waitforprompt 2000
+        promptmsg BoardAmount[0]
+        pause 1000
+    endif
+endfor
 
 replygump 0xe158184c 0
 
