@@ -15,6 +15,9 @@ endif
 @removelist 'LogList'
 @removelist 'KeepItems'
 // Getting Storage, Runebooks and Axe
+if not @findalias 'SecureStorage'
+  promptalias 'SecureStorage'
+endif
 if not @findalias 'LogStorage'
   promptalias 'LogStorage'
 endif
@@ -86,20 +89,19 @@ if list 'Runes' == 0
 endif
 // Main Loop
 sysmsg 'Starting to chopp wood.' 33
-pause 1000
+pause 750
 while list 'TreeBook' > 0
-    sysmsg 'Using TreeBook: ' 33
+    sysmsg 'Using TreeBook:' 33
     sysmsg TreeBook[0] 33
     while list 'Runes' > 0
-        pause 500
         while mana < 20
-            sysmsg 'Recovering mana...'
+            sysmsg 'Recovering mana...' 33
             pause 2000
         endwhile
         @clearjournal
         pause 500
         useobject TreeBook[0]
-        waitforgump 0x554b87f3 5000
+        waitforgump 0x554b87f3 3000
         replygump 0x554b87f3 Runes[0]
         sysmsg 'Rune position:' 33
         sysmsg Runes[0] 33
@@ -115,7 +117,7 @@ while list 'TreeBook' > 0
             // Check if axe is equipped
             if not @findlayer 'self' '2'
                 equipitem 'Axe' '2'
-                pause 1000
+                pause 2000
             endif
             // Prevent Target Loop
             @canceltarget
@@ -134,10 +136,7 @@ while list 'TreeBook' > 0
             endif
             // Check for targeting axe at other stuff than wood
             if @injournal 'use an axe on that' 'system'
-                useobject TreeBook[0]
-                waitforgump 0x554b87f3 5000
-                replygump 0x554b87f3 Runes[0]
-                pause 2000
+                replay
             endif
             // Check weight before continuing
             if diffweight < '80'
@@ -149,6 +148,7 @@ while list 'TreeBook' > 0
                 if @injournal 'too encumbered to move' 'system'
                     while @findtype LogList[0] 'any' 'backpack' 'any' '2'
                         pause 300
+                        @canceltarget
                         @setalias 'Log' 'found'
                         @useobject 'Axe'
                         waitfortarget 2500
@@ -157,8 +157,8 @@ while list 'TreeBook' > 0
                     endwhile
                     replay
                 endif
-                // Check if LogStorage is near. If not, replay
-                if not @inrange 'LogStorage' '4'
+                // Check if SecureStorage is near. If not, replay
+                if not @inrange 'SecureStorage' '4'
                     replay
                 endif
                 // Check for equiped axe
@@ -169,12 +169,16 @@ while list 'TreeBook' > 0
                 // Cut logs before storing
                 while @findtype LogList[0] 'any' 'backpack' 'any' '2'
                     pause 300
+                    @canceltarget
                     @setalias 'Log' 'found'
                     @useobject 'Axe'
                     waitfortarget 2500
                     target! 'Log' 10000
                     pause 2000
                 endwhile
+                // Open SecureStorage
+                @useobject 'SecureStorage'
+                pause 1500
                 // Store the boards and other lumber stuff
                 for 0 to 'KeepItems'
                     while @findtype 'KeepItems[]' 'any' 'backpack' 'any' '2'
