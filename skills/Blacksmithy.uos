@@ -1,0 +1,101 @@
+// Author: César Liedke
+// Description: Blacksmithy
+//
+if not @findalias 'Trash'
+    promptalias 'Trash'
+endif
+
+if not @findalias 'IngotStorage'
+  promptalias 'IngotStorage'
+endif
+
+if not listexists 'TrashList'
+    @createlist 'TrashList'
+endif
+
+if list 'TrashList' == 0
+    @pushlist 'TrashList' '0x1441' // Cutlass
+    @pushlist 'TrashList' '0x13b6' // Scimitar
+    @pushlist 'TrashList' '0x1401' // Kryss
+    @pushlist 'TrashList' '0x13ff' // Katana
+endif
+
+if skill 'Blacksmithy' < 35
+    sysmsg 'Buy more skill (35) before proceeding' 33
+else
+    if @counttype '0x13e3' '0' 'backpack' > 2
+        usetype '0x13e3'
+        waitforgump 0x38920abd 2500
+        pause 2000
+        if skill 'Blacksmithy' < 43
+            // Cutlass
+            replygump 0x38920abd 36
+            waitforgump 0x38920abd 2500
+            replygump 0x38920abd 23
+        elseif skill 'Blacksmithy' < 47
+            // Scimitar
+            replygump 0x38920abd 36
+            waitforgump 0x38920abd 2500
+            replygump 0x38920abd 58
+         elseif skill 'Blacksmithy' < 52
+            // Kryss
+            replygump 0x38920abd 36
+            waitforgump 0x38920abd 2500
+            replygump 0x38920abd 44
+         elseif skill 'Blacksmithy' < 60
+            // Katana
+            replygump 0x38920abd 36
+            waitforgump 0x38920abd 2500
+            replygump 0x38920abd 37
+         elseif skill 'Blacksmithy' < 95
+            // Short Spear
+            replygump 0x38920abd 50
+            waitforgump 0x38920abd 2500
+            replygump 0x38920abd 44
+         elseif skill 'Blacksmithy' < 100
+            // Plate Gorgetwaitforgump 0x38920abd 2500
+            replygump 0x38920abd 15
+            waitforgump 0x38920abd 2500
+            replygump 0x38920abd 16
+        else
+            sysmsg 'GM Blacksmithy! Stoping...' 33
+        endif
+        pause 2000
+        if @ingump '0x38920abd' 'have the resources'
+            sysmsg 'Need more iron ingots.' 33
+            useobject 'IngotStorage'
+            pause 500
+            movetype '0x1bf2' 'IngotStorage' 'backpack' '0' '0' '0' '0' '1000' '2'
+            replay
+        endif
+    else
+        if @counttype '0x1eb8' '0' 'backpack' >= 2
+            usetype '0x1eb8'
+            pause 1000
+            waitforgump 0x38920abd 2500
+            replygump 0x38920abd 8
+            waitforgump 0x38920abd 2500
+            replygump 0x38920abd 93
+            waitforgump 0x38920abd 2500
+            replygump 0x38920abd 0
+        else
+            usetype '0x1eb8'
+            pause 1000
+            waitforgump 0x38920abd 2500
+            replygump 0x38920abd 8
+            waitforgump 0x38920abd 2500
+            replygump 0x38920abd 23
+            waitforgump 0x38920abd 2500
+            replygump 0x38920abd 0
+        endif
+    endif
+    if diffweight < '80'
+        for 0 to 'TrashList'
+            while @findtype 'TrashList[]' 'any' 'backpack' 'any' '2'
+                pause 300
+                moveitem 'found' 'trash'
+                pause 800
+            endwhile
+        endfor
+    endif
+endif

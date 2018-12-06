@@ -1,0 +1,85 @@
+removelist 'DiscordTable'
+
+if not listexists 'DiscordTable'
+    createlist 'DiscordTable'
+endif
+
+if skill 'discordance' < 24
+    sysmsg 'Buy more skill from NPC'
+    stop
+endif
+
+if list 'DiscordTable' == 0
+    if skill 'discordance' >= 24 and skill 'discordance' < 40
+        @pushlist 'DiscordTable' '' // Polar Bears
+    elseif skill 'discordance' >= 40 and skill 'discordance'  < 59
+        @pushlist 'DiscordTable' '' // Harpies
+    elseif skill 'discordance' >= 59 and skill 'discordance'  < 83
+        @pushlist 'DiscordTable' '' // Pixies
+    elseif skill 'discordance' >= 83 and skill 'discordance'  < 101
+        @pushlist 'DiscordTable' '' // Healers, Priests of Mondain
+    elseif skill 'discordance' >= 101 and skill 'discordance'  < 119.1
+        @pushlist 'DiscordTable' '' // Ethereal Warriors
+    elseif skill 'discordance' >= 119.1 and skill 'discordance'  < 120
+        @pushlist 'DiscordTable' '' // Serpentine Dragons
+    endif
+endif
+
+
+if findtype 0x80  'any' 'world' 0 10
+  // Pathfind
+  @settimer 'pathfind' 0
+  while @findobject 'found' and not @inrange 'found' 2
+    if dead
+      break
+    elseif @timer 'pathfind' >= 5000
+      // Diverge
+      if direction == 0
+        @poplist 'unstuck' 'north'
+      elseif direction == 2
+        @poplist 'unstuck' 'east'
+      elseif direction == 4
+        @poplist 'unstuck' 'south'
+      elseif direction == 6
+        @poplist 'unstuck' 'west'
+      endif
+      // Unstuck
+      if list 'unstuck' != 0
+        for 5
+          run 'unstuck[0]'
+          pause 100
+        endfor
+        poplist 'unstuck' 'front'
+      endif
+      break
+    elseif @x 'found' > x 'self' and @y 'found' > y 'self'
+      run 'southeast'
+    elseif @x 'found' < x 'self' and @y 'found' > y 'self'
+      run 'southwest'
+    elseif @x 'found' > x 'self' and @y 'found' < y 'self'
+      run 'northeast'
+    elseif @x 'found' < x 'self' and @y 'found' < y 'self'
+      run 'northwest'
+    elseif @x 'found' > x 'self' and @y 'found' == y 'self'
+      run 'east'
+    elseif @x 'found' < x 'self' and @y 'found' == y 'self'
+      run 'west'
+    elseif @x 'found' == x 'self' and @y 'found' > y 'self'
+      run 'south'
+    elseif @x 'found' == x 'self' and @y 'found' < y 'self'
+      run 'north'
+    endif
+    pause 100
+  endwhile
+  useskill 'Discordance'
+  pause 1000
+  target! 'found'
+  pause 10000
+  while  @injournal 'You play jarring' or  @injournal 'That creature is already'
+    pause 500
+    msg 'hide' 3
+    useskill 'hiding'
+    pause 17000
+    clearjournal
+  endwhile
+endif

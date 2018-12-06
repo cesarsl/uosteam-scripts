@@ -1,0 +1,24 @@
+promptalias 'Source'
+promptalias 'Target'
+@removelist 'KeepItems'
+if not listexists 'KeepItems'
+  @createlist 'KeepItems'
+endif
+if list 'KeepItems' == 0
+  @pushlist 'KeepItems' '0x1bf2' // Ingots
+  @pushlist 'KeepItems' '0x3192' // Dark Saphire
+  @pushlist 'KeepItems' '0x3193' // Turquoise
+  @pushlist 'KeepItems' '0x3194' // Perfect Emerald
+  @pushlist 'KeepItems' '0x3195' // Ecru Citrine
+  @pushlist 'KeepItems' '0x3197' // Fire Ruby
+  @pushlist 'KeepItems' '0x3198' // Blue Diamond
+endif
+
+for 0 to 'KeepItems'
+    while @movetype 'KeepItems[]' 'Source' 'Target'
+        pause 800
+    endwhile
+endfor
+
+@unsetalias 'Source'
+@unsetalias 'Target' 
